@@ -1,0 +1,15 @@
+
+# Flask framework
+Flask==2.3.3
+Flask-SQLAlchemy==3.0.5
+
+# PostgreSQL adapter
+psycopg2-binary==2.9.7
+
+# Data analysis and visualization
+pandas==2.1.1
+matplotlib==3.7.2
+plotly==5.16.1
+
+# Environment variables
+python-dotenv==1.0.0

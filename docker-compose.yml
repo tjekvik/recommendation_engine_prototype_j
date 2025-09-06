@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # PostgreSQL database
+  postgres:
+    build: ./postgres
+    environment:
+      POSTGRES_DB: tjekvik_recommendation
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # Streamlit app
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgresql://user:password@postgres:5432/tjekvik_recommendation
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+
+volumes:
+  postgres_data:
