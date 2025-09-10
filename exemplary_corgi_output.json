@@ -1,0 +1,244 @@
+{
+    "vin": "5YJ3E7EC4MF843538",
+    "valid": true,
+    "components": {
+        "checkDigit": {
+            "position": 9,
+            "actual": "4",
+            "expected": "4",
+            "isValid": true
+        },
+        "modelYear": {
+            "year": 2021,
+            "source": "position",
+            "confidence": 1
+        },
+        "wmi": {
+            "code": "5YJ",
+            "manufacturer": "TESLA, INC.",
+            "make": "Tesla",
+            "country": "UNITED STATES (USA)",
+            "vehicleType": "Passenger Car",
+            "region": "OTHER"
+        },
+        "vds": {
+            "raw": "3E7EC4",
+            "patterns": [
+                {
+                    "element": "Body Class",
+                    "code": "BodyClass",
+                    "attributeId": "Sedan/Saloon",
+                    "value": "Sedan/Saloon",
+                    "confidence": 0.75,
+                    "positions": [
+                        3,
+                        4
+                    ],
+                    "schema": "TESLA, INC Schema for PC/MPV 5YJ - (2021)",
+                    "metadata": {
+                        "lookupTable": "BodyStyle",
+                        "groupName": "Exterior / Body",
+                        "elementWeight": 99,
+                        "patternType": "VDS",
+                        "rawPattern": "*E"
+                    }
+                },
+                {
+                    "element": "Make",
+                    "code": "MK",
+                    "attributeId": "Tesla",
+                    "value": "Tesla",
+                    "confidence": 1,
+                    "positions": [
+                        3
+                    ],
+                    "schema": "TESLA, INC Schema for PC/MPV 5YJ - (2021)",
+                    "metadata": {
+                        "lookupTable": null,
+                        "groupName": "Vehicle",
+                        "elementWeight": 99,
+                        "patternType": "VDS",
+                        "rawPattern": "3"
+                    }
+                },
+                {
+                    "element": "Model",
+                    "code": "Model",
+                    "attributeId": "Model 3",
+                    "value": "Model 3",
+                    "confidence": 1,
+                    "positions": [
+                        3
+                    ],
+                    "schema": "TESLA, INC Schema for PC/MPV 5YJ - (2021)",
+                    "metadata": {
+                        "lookupTable": "Model",
+                        "groupName": "General",
+                        "elementWeight": 99,
+                        "patternType": "VDS",
+                        "rawPattern": "3"
+                    }
+                },
+                {
+                    "element": "Fuel Type - Primary",
+                    "code": "FuelTypePrimary",
+                    "attributeId": "Electric",
+                    "value": "Electric",
+                    "confidence": 0.625,
+                    "positions": [
+                        3,
+                        4,
+                        5,
+                        6
+                    ],
+                    "schema": "TESLA, INC Schema for PC/MPV 5YJ - (2021)",
+                    "metadata": {
+                        "lookupTable": "FuelType",
+                        "groupName": "Engine",
+                        "elementWeight": 91,
+                        "patternType": "VDS",
+                        "rawPattern": "***E"
+                    }
+                },
+                {
+                    "element": "Doors",
+                    "code": "Doors",
+                    "attributeId": "4",
+                    "value": "4",
+                    "confidence": 0.75,
+                    "positions": [
+                        3,
+                        4
+                    ],
+                    "schema": "TESLA, INC Schema for PC/MPV 5YJ - (2021)",
+                    "metadata": {
+                        "lookupTable": null,
+                        "groupName": "Exterior / Body",
+                        "elementWeight": null,
+                        "patternType": "VDS",
+                        "rawPattern": "*E"
+                    }
+                },
+                {
+                    "element": "Other Engine Info",
+                    "code": "OtherEngineInfo",
+                    "attributeId": "Dual Motor – Performance",
+                    "value": "Dual Motor – Performance",
+                    "confidence": 0.7,
+                    "positions": [
+                        3,
+                        4,
+                        5,
+                        6,
+                        7
+                    ],
+                    "schema": "TESLA, INC Schema for PC/MPV 5YJ - (2021)",
+                    "metadata": {
+                        "lookupTable": null,
+                        "groupName": "Engine",
+                        "elementWeight": null,
+                        "patternType": "VDS",
+                        "rawPattern": "3***C"
+                    }
+                }
+            ]
+        },
+        "vis": {
+            "raw": "MF843538",
+            "patterns": [
+                {
+                    "element": "Plant Country",
+                    "code": "PlantCountry",
+                    "attributeId": "UNITED STATES (USA)",
+                    "value": "UNITED STATES (USA)",
+                    "confidence": 1,
+                    "positions": [
+                        9,
+                        10,
+                        11,
+                        12,
+                        13
+                    ],
+                    "schema": "TESLA, INC Schema for PC/MPV 5YJ - (2021)",
+                    "metadata": {
+                        "lookupTable": "Country",
+                        "groupName": "General",
+                        "elementWeight": 99,
+                        "patternType": "VIS",
+                        "rawPattern": "*****|*F"
+                    }
+                },
+                {
+                    "element": "Plant City",
+                    "code": "PlantCity",
+                    "attributeId": "FREMONT",
+                    "value": "FREMONT",
+                    "confidence": 1,
+                    "positions": [
+                        9,
+                        10,
+                        11,
+                        12,
+                        13
+                    ],
+                    "schema": "TESLA, INC Schema for PC/MPV 5YJ - (2021)",
+                    "metadata": {
+                        "lookupTable": null,
+                        "groupName": "General",
+                        "elementWeight": 98,
+                        "patternType": "VIS",
+                        "rawPattern": "*****|*F"
+                    }
+                },
+                {
+                    "element": "Plant State",
+                    "code": "PlantState",
+                    "attributeId": "CALIFORNIA",
+                    "value": "CALIFORNIA",
+                    "confidence": 1,
+                    "positions": [
+                        9,
+                        10,
+                        11,
+                        12,
+                        13
+                    ],
+                    "schema": "TESLA, INC Schema for PC/MPV 5YJ - (2021)",
+                    "metadata": {
+                        "lookupTable": null,
+                        "groupName": "General",
+                        "elementWeight": 98,
+                        "patternType": "VIS",
+                        "rawPattern": "*****|*F"
+                    }
+                }
+            ]
+        },
+        "vehicle": {
+            "make": "Tesla",
+            "model": "Model 3",
+            "year": 2021,
+            "manufacturer": "TESLA, INC.",
+            "gvwr": "",
+            "bodyStyle": "Sedan",
+            "fuelType": "Electric",
+            "doors": "4"
+        },
+        "plant": {
+            "country": "UNITED STATES (USA)",
+            "city": "FREMONT",
+            "code": "F"
+        },
+        "engine": {
+            "fuel": "Electric"
+        }
+    },
+    "errors": [],
+    "metadata": {
+        "processingTime": 0.6483750000006694,
+        "confidence": 0.8694444444444445,
+        "schemaVersion": "1.0",
+        "matchedSchema": "TESLA, INC Schema for PC/MPV 5YJ - (2021)",
+        "totalPatterns": 9
+    }
+}

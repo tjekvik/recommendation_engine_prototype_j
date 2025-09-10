@@ -209,3 +209,5 @@ __marimo__/
 
 # Tjekvik Postgres Dumps
 *_dump.sql
+data/*.csv
+node_modules/

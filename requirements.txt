@@ -1,15 +1,27 @@
 
-# Flask framework
+# Dash framework
 Flask==2.3.3
 Flask-SQLAlchemy==3.0.5
+dash==3.2.0
 
 # PostgreSQL adapter
 psycopg2-binary==2.9.7
 
 # Data analysis and visualization
+jellyfish==1.2.0
 pandas==2.1.1
+numpy==1.26.4
 matplotlib==3.7.2
 plotly==5.16.1
 
+# Networking
+requests==2.31.0
+
 # Environment variables
 python-dotenv==1.0.0
+
+# Car data handling
+vininfo==1.9.1
+
+# Tests
+pytest==7.4.0

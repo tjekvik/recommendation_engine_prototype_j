@@ -12,6 +12,13 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+  vin-decoder:
+    build: ./vin_decoder
+    ports:
+      - "4000:4000"
+    command: ["npm", "run", "serve"]
+    depends_on:
+      - web
 
   # Streamlit app
   web:
@@ -20,6 +27,8 @@ services:
       - "8080:8080"
     environment:
       - DATABASE_URL=postgresql://user:password@postgres:5432/tjekvik_recommendation
+      - VIN_DECODER_URL=http://vin-decoder:4000
+    restart: always
     depends_on:
       - postgres
     volumes:
