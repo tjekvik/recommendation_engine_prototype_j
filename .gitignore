@@ -211,3 +211,5 @@ __marimo__/
 *_dump.sql
 data/*.csv
 node_modules/
+vin_predictor/*.csv
+vin_predictor/trained
