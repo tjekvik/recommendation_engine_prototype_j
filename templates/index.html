@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommendation Engine Prototype</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        header, main, footer { margin-bottom: 2rem; }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header class="mb-4 flex-shrink-0 text-center">
+        <h1 class="center">Recommendation Engine Prototype</h1>
+        <nav>
+            <!-- Navigation links go here -->
+        </nav>
+    </header>
+    <main class="container flex-grow-1" role="main">
+        <div class="jumbotron">
+            <div class="container">
+            <h1 class="display-3">Recommendation Engine API</h1>
+            </div>
+        </div>
+        <hr>
+
+        <div class="container">
+            <h2 class="display-4">Available Models</h1>
+            <div class="row">
+            <div class="col-md-4">
+                <h3>VININFO 🐍</h3>
+                <p>Open source Python <a href="https://github.com/idlesign/vininfo">library</a> extracting data based on WMI rules </p>
+                <p><a class="btn btn-secondary" href="/api/vininfo/5YJSA7H22FFP72823" role="button">Try it now »</a></p>
+            </div>
+            <div class="col-md-4">
+                <h2>Corgi 🐶</h2>
+                <p>Based on excellent <a href="https://github.com/cardog-ai/corgi">VIN decoding library</a>  - uses offline NHTSA database - suited for US made cars mostly </p>
+                <p><a class="btn btn-secondary" href="/api/corgi/5YJSA7H22FFP72823" role="button">Try it now »</a></p>
+            </div>
+            <div class="col-md-4">
+                <h2>B95 <img src="/static/favicon.ico" alt="Tjekvik Logo" width="32" height="32"></h2>
+                <p>Keras neural network domestically trained on Tjekvik Data, detects only brand for now</p>
+                <p><a class="btn btn-secondary" href="/api/b95/WVGZZZC1ZLY131553" role="button">Try it now »</a></p>
+            </div>
+            </div>
+
+            <hr>
+
+        </div>
+        <section>
+            <h2>API Documentation</h2>
+            <p>To be determined... 🚧</p>
+        </section>
+    </main>
+    <footer class="footer mt-auto py-3 bg-light text-center">
+      <div class="container">
+        <span class="text-muted">2025 Recommendation Engine Prototype by <a href="https://tjekvik.com">Tjekvik</a></span>
+      </div>
+    </footer>
+</body>
+</html>

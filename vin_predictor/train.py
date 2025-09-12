@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Embedding, Flatten, Dropout
+from tensorflow.keras.layers import Dense, Embedding, Flatten, Dropout, BatchNormalization
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import train_test_split
@@ -21,23 +21,36 @@ class VINBrandPredictor:
         self.max_length = 17  # VIN numbers are always 17 characters
         self.vocab_size = None
 
+    def ignore_chars_at_positions(self, text):
+        """
+        Remove characters at specific positions across all texts
+        positions_to_ignore: list of positions (0-indexed)
+        """
+        chars = list(text)
+        # Remove from right to left to maintain indices
+        for pos in sorted([3,4,5,6,7,8,14,15,16], reverse=True):
+            chars[pos] = '0'
+        return ''.join(chars)
+
+
     def unify_brand_name(self, brand: str) -> str:
         audi_aliases = ['a']
-        bmw_aliases = ["bmw cars", "bmw_motorrad", "bmwi", 'bm', 'bw', 'm5'] # m5 most likely refers to BMW m5
+        bmw_aliases = ["b", "bmw cars", "bmw_motorrad", "bmwi", 'bm', 'bw', 'm5', 'l'] # m5 most likely refers to BMW m5 L are lagerkraftwagen Caddy etc
         citroen_aliases = ['citroën', 'ci']
         ford_aliases = ['fo']
         honda_aliases = ['hk']
         hyundai_aliases = ['hy']
         kia_aliases = ['k', 'kg', 'ki']
         mercedes_aliases = ["wdb","mb", "mb pkw","mercedes", "mercedes-benz", "mercedes turismos", "mercedes-benz automóveis", "mercedes-benz personbil", "mercedes-benz varebil", "mercedes-benz cars"]
-        mg_aliases = ['mg motor uk']
+        mg_aliases = ['mg motor uk'] # few records under 'm' as well but m is mostly volkswagen
         nissan_aliases = ['n']
         opel_aliases = ['op']
-        seat_aliases = ['sea']
-        skoda_aliases = ['škoda']
+        seat_aliases = ['s','sea'] # some dealerships use S for Cupra as well
+        porsche_aliases = ['p'] # porsche mostly
+        skoda_aliases = ['škoda', 'c'] # c mostly skoda with some VW as well
         peugeot_aliases = ['pe', 'pg']
         renault_aliases = ['rn']
-        volkswagen_aliases = ["w", "vw trp", "vw", "vw pkw","wvw"]
+        volkswagen_aliases = ["v","w", "vw trp", "vw", "vw pkw","wvw", 'm'] # few Vauxhall but not many under v
         volvo_aliases = ["vo"]
         toyota_aliases = ['to']
         if brand in bmw_aliases:
@@ -75,7 +88,9 @@ class VINBrandPredictor:
         elif brand in renault_aliases:
             return 'renault'
         elif brand in volvo_aliases:
-            return 'renault'
+            return 'volvo'
+        elif brand in porsche_aliases:
+            return 'porsche'
         else:
             return brand
         
@@ -91,6 +106,7 @@ class VINBrandPredictor:
         # Basic data cleaning
         df = df.dropna()  # Remove any rows with missing values
         df['vin'] = df['vin'].str.upper()  # Normalize VIN to uppercase
+        df['vin'] = df['vin'].apply(self.ignore_chars_at_positions)
         df['brand'] = df['brand'].str.strip()  # Remove whitespace from brand names
         df['brand'] = df['brand'].str.lower()  # Remove whitespace from brand names
         df['brand'] = df['brand'].apply(self.unify_brand_name)  # Unify brand names
@@ -160,12 +176,16 @@ class VINBrandPredictor:
      
             Dense(256, activation='relu'),
             Dropout(0.3),
+
+            BatchNormalization(),
             
             Dense(128, activation='relu'),
             Dropout(0.2),
             
             Dense(64, activation='relu'),
             Dropout(0.1),
+
+            BatchNormalization(),
             
             # Output layer
             Dense(num_classes, activation='softmax')

@@ -1,36 +1,37 @@
-# from flask import Flask, render_template, jsonify
-# from flask_sqlalchemy import SQLAlchemy
-import dash
-from dash import Dash, html, dcc
+from flask import Flask, render_template, jsonify, url_for, send_from_directory
 from dotenv import load_dotenv
+
+from util import decode_vin_corgi, decode_vin_vininfo, decode_vin_b95
+
 
 load_dotenv()
 
-# app = Flask(__name__)
-
-# # Database configuration
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
-#     'DATABASE_URL', 
-#     'postgresql://user:password@localhost:5432/tjekvik_recommendation'
-# )
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# db.init_app(app)
+app = Flask(__name__)
 
 
-app = Dash(use_pages=True)
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                          'favicon.ico',mimetype='image/vnd.microsoft.icon')
 
-app.layout = html.Div([
-    html.H1('Recommendation Engine Prototype Presentation'),
-    html.Div([
-        html.Div(
-            dcc.Link(f"{page['name']} - {page['path']}", href=page["relative_path"])
-        ) for page in dash.page_registry.values()
-    ]),
-    dash.page_container
-])
+@app.route('/')
+def home():
+    return render_template('index.html')
 
-# app.
+@app.route('/api/corgi/<vin>')
+def api_corgi(vin):
+    result = decode_vin_corgi(vin)
+    return jsonify(result)
+
+@app.route('/api/vininfo/<vin>')
+def api_vininfo(vin):
+    result = decode_vin_vininfo(vin)
+    return jsonify(result)
+
+@app.route('/api/b95/<vin>')
+def api_b95(vin):
+    result = decode_vin_b95(vin)
+    return jsonify(result)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8080, host='0.0.0.0')
+    app.run(port=8080, debug=True, host='0.0.0.0')
