@@ -18,7 +18,7 @@ tensorflow==2.20.0
 scikit-learn==1.7.2
 
 # Networking
-requests==2.31.0
+requests==2.32.4
 
 # Environment variables
 python-dotenv==1.0.0
