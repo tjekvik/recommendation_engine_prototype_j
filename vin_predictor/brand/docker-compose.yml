@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  onnx-converter:
+    build: .
+    volumes:
+      - ./onnx:/onnx  # Maps your local ./data folder to container /data
+    environment:
+      - PYTHONUNBUFFERED=1

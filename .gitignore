@@ -213,3 +213,4 @@ data/*.csv
 node_modules/
 vin_predictor/*.csv
 vin_predictor/trained
+vin_predictor/data
