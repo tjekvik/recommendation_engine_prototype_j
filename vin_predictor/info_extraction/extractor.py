@@ -35,9 +35,9 @@ if __name__ == "__main__":
     print("Info extraction")
     extractor = Extractor()
 
-    df = pd.read_csv("data/brand_info_model/bim_100k.csv")
+    df = pd.read_csv("data/brand_info_model/bim_all_oct.csv")
     df['info'] = df['info'].apply(lambda x: str(x))
     df['model'] = df['info'].apply(extractor.extract_model)
     df = df[df['model'].notna()]
-    df.to_csv("data/brand_info_model_extracted/bim_100k.csv", index = False)
+    df.to_csv("data/brand_info_model_extracted/bim_all.csv", index = False)
     print(df['model'].value_counts())

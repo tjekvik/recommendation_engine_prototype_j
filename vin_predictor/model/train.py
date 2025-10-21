@@ -5,8 +5,13 @@ import pandas as pd
 import numpy as np
 import tensorflow as tf
 from pathlib import Path
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Embedding, Flatten, Dropout, BatchNormalization
+import keras
+import pickle
+
+from tensorflow.keras.models import Sequential, Model, load_model
+from tensorflow.keras.layers import Dense, Embedding, Flatten, Dropout, BatchNormalization, Conv1D, MaxPooling1D, GlobalMaxPooling1D
+from tensorflow.keras.layers import Input, Embedding, Concatenate, Dense, Conv1D, GlobalMaxPooling1D, Dropout, BatchNormalization, RepeatVector, Reshape, Cropping1D, Lambda, Multiply
+
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import train_test_split
@@ -65,8 +70,8 @@ class VINModelPredictor:
         """
         if self.tokenizer is None:
             # Create tokenizer for character-level encoding
-            self.tokenizer = Tokenizer(char_level=True, lower=False)
-            self.tokenizer.fit_on_texts(vins)
+            print("Loading tokenizer from brand to have the same results in joint model")
+            self.tokenizer = pickle.load(open("models/brand/vin_brand_predictor_tokenizer.pkl", "rb")) 
             self.vocab_size = len(self.tokenizer.word_index) + 1
             print(f"Vocabulary size: {self.vocab_size}")
         
@@ -90,6 +95,69 @@ class VINModelPredictor:
         return encoded_labels
     
     def build_model(self, num_classes):
+        
+        # Load or define your other model
+        other_model = load_model('models/brand/vin_brand_predictor.keras')
+        other_model.trainable = False 
+
+        # Define input
+        inputs = Input(shape=(self.max_length,))
+
+
+        # Reshape to 3D: (17,) -> (17, 1)
+        reshaped = Reshape((17, 1))(inputs)
+
+        # Now Cropping1D works
+        cropped = Cropping1D(cropping=(0, 6))(reshaped)  # (11, 1)
+
+        # Flatten back to 1D
+        flattened = Flatten()(cropped) 
+        # Branch 1: Embedding
+        embedding_output = Embedding(
+            input_dim=self.vocab_size,
+            output_dim=128,
+            input_length=self.max_length -6
+        )(flattened)
+
+        # Branch 2: Other model (outputs shape: (None, 52))
+        other_output = other_model(inputs)
+
+        # Option 1: Repeat other_output for each position in sequence
+        other_output_repeated = RepeatVector(self.max_length)(other_output)
+
+        other_output_cropped = Cropping1D(cropping=(0, 6))(other_output_repeated)
+
+        # Concatenate along feature dimension
+        concatenated = Concatenate(axis=-1)([embedding_output, other_output_cropped])
+
+        # Continue with rest of your model
+        x = Conv1D(256, 3, activation='relu', padding='same')(concatenated)
+        x = BatchNormalization()(x)
+        x = GlobalMaxPooling1D()(x)
+
+        x = Dense(512, activation='relu')(x)
+        x = BatchNormalization()(x) 
+        x = Dropout(0.5)(x)
+
+        x = Dense(256, activation='relu')(x)
+        x = BatchNormalization()(x) 
+        x = Dropout(0.4)(x)
+
+        outputs = Dense(num_classes, activation='softmax')(x)
+
+        # Create final model
+        model = Model(inputs=inputs, outputs=outputs)
+
+        model.compile(
+            optimizer='adam',
+            loss='sparse_categorical_crossentropy',
+            metrics=['accuracy']
+        )
+        
+        self.model = model
+        return model
+    
+    def build_model_old(self, num_classes):
         """
         Build the neural network architecture
         """
@@ -99,23 +167,26 @@ class VINModelPredictor:
                      output_dim=64, 
                      input_length=self.max_length),
             
-            # Flatten the embedded sequences
-            Flatten(),
-            
-            # Dense layers with dropout for regularization
-     
-            Dense(256, activation='relu'),
-            Dropout(0.3),
-
+            Conv1D(filters=256, kernel_size=3, activation='relu', padding='same'),
             BatchNormalization(),
+            MaxPooling1D(pool_size=2),
+            Dropout(0.3),
+            
+            Conv1D(filters=128, kernel_size=3, activation='relu', padding='same'),
+            BatchNormalization(),
+            GlobalMaxPooling1D(),  # Better than Flatten
+            
+            # Dense layers
+            Dense(512, activation='relu'),
+            BatchNormalization(),
+            Dropout(0.5),
+            
+            Dense(256, activation='relu'),
+            BatchNormalization(),
+            Dropout(0.4),
             
             Dense(128, activation='relu'),
-            Dropout(0.2),
-            
-            Dense(64, activation='relu'),
-            Dropout(0.1),
-
-            BatchNormalization(),
+            Dropout(0.3),
             
             # Output layer
             Dense(num_classes, activation='softmax')
@@ -301,7 +372,7 @@ if __name__ == "__main__":
     
     # Train the model (replace 'your_data.csv' with your actual CSV file path)
     # The CSV should have columns 'VIN' and 'Model'
-    model, history = predictor.train_model('data/brand_info_model_extracted/bim_100k.csv', epochs=30)
+    model, history = predictor.train_model('data/brand_info_model_extracted/bim_all.csv', epochs=10)
     
     # Plot training results
     predictor.plot_training_history()

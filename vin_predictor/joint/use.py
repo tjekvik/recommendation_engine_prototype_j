@@ -34,7 +34,9 @@ if __name__ == "__main__":
         print(f"VIN: {vin}")
         np_prediction = np.array(prediction)
         brand_pred = brand_labels.inverse_transform([np.argmax(np_prediction[:brand_end_index])])[0]
-        model_pred = model_labels.inverse_transform([np.argmax(np_prediction[brand_end_index:model_end_index])])[0]
+        model_preds = model_labels.inverse_transform(
+             np.argsort(np_prediction[brand_end_index:model_end_index])[-5:][::-1]
+             )
 
         year_tensor = np.array([np_prediction[model_end_index:]])
         year_tensor = (year_tensor > 0.5).astype(int)
@@ -42,7 +44,7 @@ if __name__ == "__main__":
 
         brand_confidence = np.max(np_prediction[:brand_end_index])
         model_confidence = np.max(np_prediction[brand_end_index:model_end_index])
-        print(f"Predicted Model: {model_pred}")
+        print(f"Predicted Models: {model_preds[0]}")
         print(f"Predicted Brand: {brand_pred}")
         print(f"Predicted Year: {year_pred[0]}")
         print(f"Brand Confidence: {brand_confidence:.4f}")
