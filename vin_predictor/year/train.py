@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import pickle
 import pandas as pd
 import numpy as np
 import tensorflow as tf
@@ -65,8 +66,8 @@ class VINYearPredictor:
         """
         if self.tokenizer is None:
             # Create tokenizer for character-level encoding
-            self.tokenizer = Tokenizer(char_level=True, lower=False)
-            self.tokenizer.fit_on_texts(vins)
+            print("Loading tokenizer from brand to have the same results in joint model")
+            self.tokenizer = pickle.load(open("models/brand/vin_brand_predictor_tokenizer.pkl", "rb")) 
             self.vocab_size = len(self.tokenizer.word_index) + 1
             print(f"Vocabulary size: {self.vocab_size}")
         
@@ -116,13 +117,13 @@ class VINYearPredictor:
             BatchNormalization(),
             
             # Output layer
-            Dense(num_classes, activation='sigmoid')
+            Dense(num_classes, activation='softmax')
         ])
         
         # Compile the model
         model.compile(
             optimizer='adam',
-            loss='binary_crossentropy',
+            loss='sparse_categorical_crossentropy',
             metrics=['accuracy']
         )
         
@@ -293,7 +294,7 @@ if __name__ == "__main__":
     
     # Train the model (replace 'your_data.csv' with your actual CSV file path)
     # The CSV should have columns 'VIN' and 'Brand'
-    model, history = predictor.train_model('data/bininfo/bim_100k.csv', epochs=80)
+    model, history = predictor.train_model('data/vininfo/bim_year_all.csv', epochs=80)
     
     # Plot training results
     predictor.plot_training_history()

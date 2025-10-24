@@ -46,7 +46,7 @@ if __name__ == "__main__":
         model_confidence = np.max(np_prediction[brand_end_index:model_end_index])
         print(f"Predicted Models: {model_preds[0]}")
         print(f"Predicted Brand: {brand_pred}")
-        print(f"Predicted Year: {year_pred[0]}")
+        print(f"Predicted Year: {year_pred}")
         print(f"Brand Confidence: {brand_confidence:.4f}")
         print(f"Model Confidence: {model_confidence:.4f}")
         print("-" * 40)

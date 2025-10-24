@@ -20,6 +20,14 @@ class InfoTagger(RegexpTagger):
         (r"(?i)WAGON", "BODY") # CAR BODY TYPE
     ]
 
+    FUEL_PATTERNS = [
+        (r"(?i)benzyna", "FUEL"),
+        (r"(?i)diesel", "FUEL"),
+        (r"(?i)hybrid", "FUEL")
+    ]
+
+
+
 
     def __init__(self):
         make_pattern = [ (f"(?i){make}", "MAKE") for make in CAR_MAKES ]
